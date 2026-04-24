@@ -11,7 +11,8 @@ import {
   LabelList,
   Cell,
 } from "recharts";
-import { formatNumber } from "../dashboard/page";
+
+const formatNumber = (num: number): string => num.toLocaleString("en-US");
 
 interface StateData {
   state: string;

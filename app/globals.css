@@ -44,3 +44,11 @@ html.body-jakarta body,
 body.body-jakarta {
   --font-sans: var(--font-jakarta-sans);
 }
+
+@layer base {
+  input,
+  textarea,
+  select {
+    @apply text-black dark:text-white;
+  }
+}

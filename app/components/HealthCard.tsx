@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { formatNumber } from "../dashboard/page";
+
+const formatNumber = (num: number): string => num.toLocaleString("en-US");
 
 export type Status = "safe" | "normal" | "hard" | "unknown";
 

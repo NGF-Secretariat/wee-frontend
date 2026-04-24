@@ -77,11 +77,11 @@ export const navItem: NavItem[] = [
     icon: <FaDatabase />,
     label: "Data",
   },
-  {
-    href: "/dashboard/score-card",
-    icon: <FaLevelUpAlt />,
-    label: "Score Card",
-  },
+  // {
+  //   href: "/dashboard/score-card",
+  //   icon: <FaLevelUpAlt />,
+  //   label: "Score Card",
+  // },
   {
     href: "/dashboard/nfwp-su",
     icon: <FaProjectDiagram />,
