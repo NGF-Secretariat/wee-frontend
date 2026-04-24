@@ -173,8 +173,8 @@ function GovernanceChartsComponent({
 
             <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
               {usePie ? (
-                <div className="h-[280px] rounded-xl border border-gray-100 bg-gray-50 p-2">
-                  <ResponsiveContainer width="100%" height="100%">
+                <div className="rounded-xl border border-gray-100 bg-gray-50 p-2">
+                  <ResponsiveContainer width="100%" height={280}>
                     <PieChart>
                       <Pie data={policySummary} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={96} label>
                         {policySummary.map((entry) => (
@@ -187,8 +187,8 @@ function GovernanceChartsComponent({
                   </ResponsiveContainer>
                 </div>
               ) : (
-                <div className="h-[280px] rounded-xl border border-gray-100 bg-gray-50 p-2">
-                  <ResponsiveContainer width="100%" height="100%">
+                <div className="rounded-xl border border-gray-100 bg-gray-50 p-2">
+                  <ResponsiveContainer width="100%" height={280}>
                     <BarChart
                       data={policyRows}
                       layout="vertical"
@@ -242,8 +242,8 @@ function GovernanceChartsComponent({
               Numeric legal-service infrastructure indicators are rendered as bar charts for quick distribution checks.
             </p>
 
-            <div className="mt-4 h-[320px] rounded-xl border border-gray-100 bg-gray-50 p-2">
-              <ResponsiveContainer width="100%" height="100%">
+            <div className="mt-4 rounded-xl border border-gray-100 bg-gray-50 p-2">
+              <ResponsiveContainer width="100%" height={320}>
                 <BarChart data={numericSeries} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                   <XAxis dataKey="name" tick={{ fontSize: 12 }} />

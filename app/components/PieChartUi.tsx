@@ -52,7 +52,7 @@ export default function DataCard({
 
       {/* Pie Chart */}
       <div className="h-60 mt-6">
-        <ResponsiveContainer>
+        <ResponsiveContainer width="100%" height="100%" minWidth={280} minHeight={220}>
           <PieChart >
             <Pie
               data={data}

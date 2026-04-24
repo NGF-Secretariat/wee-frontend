@@ -94,7 +94,7 @@ const StateBarChart: React.FC<StateBarChartProps> = ({
           {title}
         </div>
       )}
-      <ResponsiveContainer>
+      <ResponsiveContainer width="100%" height={400} minWidth={320}>
         <BarChart
           data={data}
           margin={{ top: 20, right: 20, left: 20, bottom: 40 }}
