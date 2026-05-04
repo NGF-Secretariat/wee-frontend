@@ -18,7 +18,7 @@ import {
   FaTimes,
   FaChevronDown,
 } from "react-icons/fa";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const cn = (...classes: (string | undefined | false)[]) =>
   classes.filter(Boolean).join(" ");
@@ -124,8 +124,10 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const activePillar = searchParams.get("pillar");
+  const activePillar =
+    typeof window !== "undefined"
+      ? new URLSearchParams(window.location.search).get("pillar")
+      : null;
 
   const closeMobile = useCallback(() => {
     setMobileOpen(false);
@@ -192,7 +194,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     {/* Parent item */}
                     <button
                       onClick={() => toggleExpand(item.label)}
-                      className="w-full flex items-center justify-between p-2 rounded hover:bg-[#00A141] hover:text-white cursor-pointer "
+                      className="w-full flex items-center justify-between p-2 rounded hover:bg-[#0b7a3a] hover:text-[#ecfdf3] cursor-pointer "
                     >
                       <div className="flex items-center space-x-2">
                         {typeof item.icon === "string" ? (
@@ -231,7 +233,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                             <Link
                               key={child.label}
                               href={child.href!}
-                              className={`p-2 rounded flex items-center space-x-2 hover:bg-[#00A141] hover:text-white ${isActive ? "bg-[#00A141] text-white" : ""
+                              className={`p-2 rounded flex items-center space-x-2 hover:bg-[#0b7a3a] hover:text-[#ecfdf3] ${isActive ? "bg-[#0f8a45] text-[#f0fdf4]" : ""
                                 }`}
                               onClick={closeMobile}
                             >
@@ -271,7 +273,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   href={item.href!}
                   target={item.external ? "_blank" : undefined}
                   rel={item.external ? "noopener noreferrer" : undefined}
-                  className={`p-2 rounded flex items-center space-x-2 hover:bg-[#009B72] hover:text-white ${isActive ? "bg-[#009B72] text-white" : ""
+                  className={`p-2 rounded flex items-center space-x-2 hover:bg-[#0b7a3a] hover:text-[#ecfdf3] ${isActive ? "bg-[#0f8a45] text-[#f0fdf4]" : ""
                     }`}
                   onClick={closeMobile}
                 >

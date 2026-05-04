@@ -169,7 +169,7 @@ function StateSidebar({
   selectedPillar: PillarSelection;
   activeState: string;
   selectedCompare: string[];
-  onPillarSelect: (pillar: PillarId) => void;
+  onPillarSelect: (pillar: PillarSelection) => void;
   onStateSelect: (state: string) => void;
   onToggleCompare: (state: string) => void;
 }) {
