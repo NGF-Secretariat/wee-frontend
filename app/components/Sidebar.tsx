@@ -273,8 +273,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   href={item.href!}
                   target={item.external ? "_blank" : undefined}
                   rel={item.external ? "noopener noreferrer" : undefined}
-                  className={`p-2 rounded flex items-center space-x-2 hover:bg-[#0b7a3a] hover:text-[#ecfdf3] ${isActive ? "bg-[#0f8a45] text-[#f0fdf4]" : ""
-                    }`}
+                  className={`p-2 rounded flex items-center space-x-2 hover:bg-[#0b7a3a] hover:text-[#ecfdf3] ${isActive ? "bg-[#0f8a45] text-[#f0fdf4]" : ""}`}
                   onClick={closeMobile}
                 >
                   {typeof item.icon === "string" ? (
