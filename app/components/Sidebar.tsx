@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -17,73 +17,87 @@ import {
   FaChevronRight,
   FaTimes,
   FaChevronDown,
-  FaLevelUpAlt,
 } from "react-icons/fa";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 const cn = (...classes: (string | undefined | false)[]) =>
   classes.filter(Boolean).join(" ");
 
 export interface NavItem {
   href?: string;
+  external?: boolean;
+  matchPath?: string;
+  pillar?: string;
   icon: React.ReactNode;
   label: string;
   roles?: string[];
   children?: NavItem[]; // ✅ add nested items
 }
 
-export const HealthIcon: any = "/svg/healthIcon.svg";
-export const AgricIcon: any = "/svg/agricIcon.svg";
-export const EducationIcon: any = "/svg/eduIcon.svg";
+export const HealthIcon = "/svg/healthIcon.svg";
+export const AgricIcon = "/svg/agricIcon.svg";
+export const EducationIcon = "/svg/eduIcon.svg";
 
 export const navItem: NavItem[] = [
   {
-    href: "/dashboard",
+    href: "/dashboard/data?pillar=overview",
+    matchPath: "/dashboard/data",
+    pillar: "overview",
     icon: <FaTachometerAlt />,
     label: "Dashboard",
   },
   {
-    href: "/dashboard/economic-participation",
+    href: "/dashboard/data?pillar=econ",
+    matchPath: "/dashboard/data",
+    pillar: "econ",
     icon: <FaChartLine />,
     label: "Economic Participation",
   },
   {
-    href: "/dashboard/education-training",
+    href: "/dashboard/data?pillar=edu",
+    matchPath: "/dashboard/data",
+    pillar: "edu",
     icon: <FaGraduationCap />,
     label: "Education and Training",
   },
   {
-    href: "/dashboard/sociocultural",
+    href: "/dashboard/data?pillar=soc",
+    matchPath: "/dashboard/data",
+    pillar: "soc",
     icon: <FaUsers />,
     label: "Sociocultural",
   },
   {
-    href: "/dashboard/health",
+    href: "/dashboard/data?pillar=health",
+    matchPath: "/dashboard/data",
+    pillar: "health",
     icon: <FaHeartbeat />,
     label: "Health",
   },
   {
-    href: "/dashboard/political-empowerment",
+    href: "/dashboard/data?pillar=pol",
+    matchPath: "/dashboard/data",
+    pillar: "pol",
     icon: <FaFistRaised />,
     label: "Political empowerment",
   },
   {
-    href: "/dashboard/legal",
+    href: "/dashboard/data?pillar=legal",
+    matchPath: "/dashboard/data",
+    pillar: "legal",
     icon: <FaBalanceScale />,
     label: "Legal",
   },
   {
-    href: "/dashboard/data",
+    href: "/dashboard/data?pillar=data",
+    matchPath: "/dashboard/data",
+    pillar: "data",
     icon: <FaDatabase />,
     label: "Data",
   },
-  // {
-  //   href: "/dashboard/score-card",
-  //   icon: <FaLevelUpAlt />,
-  //   label: "Score Card",
-  // },
   {
-    href: "/dashboard/nfwp-su",
+    href: "https://nfwp.gov.ng",
+    external: true,
     icon: <FaProjectDiagram />,
     label: "NFWP-SU",
   },
@@ -110,11 +124,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
   const pathname = usePathname();
-
-
-  const toggleMobile = useCallback(() => {
-    setMobileOpen((o: boolean) => !o);
-  }, [setMobileOpen]);
+  const searchParams = useSearchParams();
+  const activePillar = searchParams.get("pillar");
 
   const closeMobile = useCallback(() => {
     setMobileOpen(false);
@@ -247,11 +258,19 @@ const Sidebar: React.FC<SidebarProps> = ({
               }
 
               // Normal single item
-              const isActive = pathname === item.href;
+              const isActive = item.href
+                ? !item.external &&
+                  ((item.matchPath
+                    ? pathname === item.matchPath
+                    : pathname === item.href || pathname.startsWith(item.href + "/")) &&
+                    (item.pillar ? activePillar === item.pillar : true))
+                : false;
               return (
                 <Link
                   key={item.label}
                   href={item.href!}
+                  target={item.external ? "_blank" : undefined}
+                  rel={item.external ? "noopener noreferrer" : undefined}
                   className={`p-2 rounded flex items-center space-x-2 hover:bg-[#009B72] hover:text-white ${isActive ? "bg-[#009B72] text-white" : ""
                     }`}
                   onClick={closeMobile}
