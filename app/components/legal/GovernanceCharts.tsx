@@ -54,8 +54,8 @@ export interface GovernanceChartsProps {
   policyChartType?: "pie" | "horizontal-bar" | "auto";
 }
 
-const PIE_COLORS = ["#0f766e", "#d1d5db"];
-const POLICY_BAR_COLORS = ["#14b8a6", "#cbd5e1"];
+const PIE_COLORS = ["#06923E", "#d1d5db"];
+const POLICY_BAR_COLORS = ["#10B981", "#cbd5e1"];
 
 const normalizeTooltipValue = (
   value: number | string | readonly (number | string)[] | undefined
@@ -156,8 +156,8 @@ function GovernanceChartsComponent({
 
   return (
     <div className={`space-y-6 ${className ?? ""}`}>
-      <div className="rounded-2xl border border-teal-100 bg-gradient-to-r from-teal-50 via-white to-cyan-50 p-6">
-        <h2 className="text-2xl font-bold text-teal-800">{title}</h2>
+      <div className="rounded-2xl border border-green-100 bg-gradient-to-r from-green-50 via-white to-emerald-50 p-6">
+        <h2 className="text-2xl font-bold text-[#06923E]">{title}</h2>
         <p className="mt-2 text-sm text-gray-600">
           Policy adoption and referral-system capacity summary using chart-first legal/governance analytics.
         </p>
@@ -249,7 +249,7 @@ function GovernanceChartsComponent({
                   <XAxis dataKey="name" tick={{ fontSize: 12 }} />
                   <YAxis tick={{ fontSize: 12 }} />
                   <Tooltip formatter={(value) => `${normalizeTooltipValue(value)}${unit}`} />
-                  <Bar dataKey="value" fill="#0f766e" radius={[6, 6, 0, 0]}>
+                  <Bar dataKey="value" fill="#06923E" radius={[6, 6, 0, 0]}>
                     <LabelList dataKey="value" position="top" />
                   </Bar>
                 </BarChart>

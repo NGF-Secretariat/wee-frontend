@@ -10,6 +10,16 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-poppins);
   --font-mono: var(--font-geist-mono);
+  --color-ngf-green: #06923E;
+  --color-ngf-green-light: #0f8a45;
+  --color-ngf-green-dark: #0b7a3a;
+  --color-ngf-accent: #3DFFA0;
+  --color-ngf-dark-blue: #0F2B4C;
+  --color-ngf-grey: #CFCFCF;
+  --color-ngf-light-grey: #E6E9EE;
+  --color-ngf-light-green: #E0EFE9;
+  --color-ngf-dark-bg: #0B0E12;
+  --color-ngf-nav-bg: #111722;
 }
 
 .body-poppins {
@@ -46,6 +56,7 @@ body.body-jakarta {
 }
 
 @layer base {
+
   input,
   textarea,
   select {

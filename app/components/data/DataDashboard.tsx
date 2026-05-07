@@ -66,7 +66,7 @@ export function DataDashboard() {
   }, [activeState, selectedCompareStates, selectedPillar]);
 
   const currentPillarMeta = selectedPillar === "overview"
-    ? { id: "econ" as PillarId, label: "Quick Overview", color: "#3DFFA0" }
+    ? { id: "econ" as PillarId, label: "Quick Overview", color: "var(--color-ngf-green)" }
     : GENDER_DASHBOARD_META.pillars.find((item) => item.id === selectedPillar)!;
   const zone = getZoneForState(activeState);
   const isYearAvailable = AVAILABLE_YEARS.includes(selectedYear);
@@ -87,25 +87,16 @@ export function DataDashboard() {
 
   return (
     <div className="space-y-4 pb-8">
-      <div className="rounded-2xl border border-[#1C2535] bg-[#0C1018] p-5 text-[#E2E8F4]">
+      <div className="rounded-2xl border border-emerald-100 bg-[#F0FDF4] p-5 text-slate-900">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-semibold">Nigeria Gender Dashboard</h1>
-            <p className="text-sm text-[#91A0BC]">NLSS 2022 microdata rendered as reusable components</p>
+            <h1 className="text-2xl font-semibold">NGF Gender Dashboard</h1>
+            <p className="text-sm text-slate-600">Nigeria 2022 Microdata </p>
           </div>
-          <select
-            value={selectedYear}
-            onChange={(event) => setSelectedYear(Number(event.target.value))}
-            className="rounded-full border border-[#243044] bg-[#111722] px-3 py-2 text-sm"
-          >
-            {[...new Set([selectedYear, ...AVAILABLE_YEARS])].map((year) => (
-              <option key={year} value={year}>{year}</option>
-            ))}
-          </select>
         </div>
         {!isYearAvailable && (
-          <p className="mt-3 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-300">
-            No NLSS dataset for {selectedYear}. Showing 2022 values.
+          <p className="mt-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+            No dataset for {selectedYear}. Showing 2022 values.
           </p>
         )}
       </div>
@@ -174,16 +165,16 @@ function StateSidebar({
   onToggleCompare: (state: string) => void;
 }) {
   return (
-    <aside className="max-h-[80vh] overflow-auto rounded-xl border border-[#1C2535] bg-[#0C1018] p-3 text-sm text-[#E2E8F4]">
+    <aside className="max-h-[80vh] overflow-auto rounded-xl border border-emerald-100 bg-[#F0FDF4] p-3 text-sm text-slate-900">
       <div className="mb-4">
-        <p className="mb-2 text-xs uppercase tracking-widest text-[#4A5A78]">Tabs</p>
+        <p className="mb-2 text-xs uppercase tracking-widest text-slate-500">Tabs</p>
         <div className="space-y-1">
           <button
             onClick={() => onPillarSelect("overview")}
-            className="block w-full rounded px-2 py-2 text-left text-xs"
+            className="block w-full rounded px-2 py-2 text-left text-xs transition-colors"
             style={{
-              color: selectedPillar === "overview" ? "#3DFFA0" : "#91A0BC",
-              backgroundColor: selectedPillar === "overview" ? "rgba(255,255,255,0.05)" : "transparent",
+              color: selectedPillar === "overview" ? "#FFFFFF" : "#91A0BC",
+              backgroundColor: selectedPillar === "overview" ? "#06923E" : "transparent",
             }}
           >
             Dashboard Overview
@@ -192,10 +183,10 @@ function StateSidebar({
             <button
               key={pillar.id}
               onClick={() => onPillarSelect(pillar.id)}
-              className="block w-full rounded px-2 py-2 text-left text-xs"
+              className="block w-full rounded px-2 py-2 text-left text-xs transition-colors"
               style={{
-                color: selectedPillar === pillar.id ? pillar.color : "#91A0BC",
-                backgroundColor: selectedPillar === pillar.id ? "rgba(255,255,255,0.05)" : "transparent",
+                color: selectedPillar === pillar.id ? "#FFFFFF" : "#91A0BC",
+                backgroundColor: selectedPillar === pillar.id ? "#06923E" : "transparent",
               }}
             >
               {pillar.label}
@@ -206,19 +197,19 @@ function StateSidebar({
 
       {Object.entries(GENDER_DASHBOARD_META.zones).map(([code, zone]) => (
         <div key={code} className="mb-3">
-          <p className="mb-1 text-xs uppercase tracking-widest text-[#4A5A78]">{zone.label}</p>
+          <p className="mb-1 text-xs uppercase tracking-widest text-slate-500">{zone.label}</p>
           <div className="space-y-1">
             {zone.states.slice().sort().map((state) => (
               <div key={state} className="flex items-center justify-between gap-2">
                 <button
                   onClick={() => onStateSelect(state === "FCT" ? "Federal Capital Territory" : state)}
-                  className={`text-xs ${state === activeState ? "text-[#3DFFA0]" : "text-[#91A0BC]"}`}
+                  className={`text-xs transition-colors ${state === activeState ? "text-[#06923E] font-medium" : "text-slate-600"} hover:text-[#06923E]`}
                 >
                   {state}
                 </button>
                 <button
                   onClick={() => onToggleCompare(state)}
-                  className={`rounded px-2 py-1 text-[10px] ${selectedCompare.includes(state) ? "bg-[#173f2b] text-[#3DFFA0]" : "bg-[#111722] text-[#91A0BC]"}`}
+                  className={`rounded px-2 py-1 text-[10px] transition-colors ${selectedCompare.includes(state) ? "bg-[#06923E] text-white" : "bg-white text-slate-600 hover:bg-emerald-50 border border-emerald-100"}`}
                 >
                   {selectedCompare.includes(state) ? "On" : "Add"}
                 </button>
@@ -251,10 +242,10 @@ function StateHeader({
   onViewChange: (mode: ViewMode) => void;
 }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#1C2535] bg-[#0C1018] p-4 text-[#E2E8F4]">
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-emerald-100 bg-[#F0FDF4] p-4 text-slate-900">
       <div>
         <h2 className="text-3xl font-semibold">{activeState}</h2>
-        <p className="text-xs text-[#91A0BC]">{zone} Zone · {pillarLabel} · {count} indicators · NLSS 2022</p>
+        <p className="text-xs text-slate-600">{zone} Zone · {pillarLabel} · {count} indicators · NLSS 2022</p>
       </div>
       <div className="flex gap-2">
         {(["cards", "table", "compare"] as ViewMode[]).map((mode) => (
@@ -262,7 +253,7 @@ function StateHeader({
             key={mode}
             onClick={() => onViewChange(mode)}
             disabled={(mode === "compare" && (compareCount === 0 || selectedPillar === "overview"))}
-            className={`rounded border px-3 py-2 text-xs uppercase tracking-wide ${viewMode === mode ? "border-[#3DFFA0] text-[#3DFFA0]" : "border-[#243044] text-[#91A0BC]"} disabled:cursor-not-allowed disabled:opacity-50`}
+            className={`rounded border px-3 py-2 text-xs uppercase tracking-wide transition-all ${viewMode === mode ? "bg-[#06923E] border-[#06923E] text-white" : "border-[#243044] text-slate-600 hover:border-[#06923E] hover:text-white"} disabled:cursor-not-allowed disabled:opacity-50`}
           >
             {mode === "compare" ? `Compare (${compareCount})` : mode}
           </button>
@@ -293,14 +284,14 @@ function ScoreCards({
           <button
             key={pillar.id}
             onClick={() => onPillarSelect(pillar.id)}
-            className="rounded-lg border bg-[#111722] p-3 text-left"
+            className="rounded-lg border bg-white p-3 text-left"
             style={{
-              borderColor: selectedPillar === pillar.id ? pillar.color : "#1C2535",
+              borderColor: selectedPillar === pillar.id ? pillar.color : "#D1FAE5",
             }}
           >
             <p className="text-[10px] uppercase tracking-wide" style={{ color: pillar.color }}>{pillar.label}</p>
-            <p className="mt-1 text-2xl font-semibold text-[#E2E8F4]">{average ? average.toFixed(1) : "-"}</p>
-            <p className="text-[11px] text-[#91A0BC]">{count} indicators</p>
+            <p className="mt-1 text-2xl font-semibold text-slate-900">{average ? average.toFixed(1) : "-"}</p>
+            <p className="text-[11px] text-slate-600">{count} indicators</p>
           </button>
         );
       })}
@@ -320,18 +311,18 @@ function IndicatorCards({
   return (
     <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
       {entries.map(([name, item]) => (
-        <article key={name} className="rounded-lg border border-[#1C2535] bg-[#111722] p-4">
+        <article key={name} className="rounded-lg border border-emerald-100 bg-white p-4">
           <div className="mb-2 h-1 rounded" style={{ backgroundColor: color }} />
-          <p className="text-sm text-[#91A0BC]">{name}</p>
-          <p className="mt-1 text-3xl font-semibold text-[#E2E8F4]">{formatValue(item.value)}</p>
-          <p className="text-xs text-[#4A5A78]">{item.unit}</p>
-          <div className="mt-3 flex items-center justify-between border-t border-[#1C2535] pt-2 text-[11px] text-[#91A0BC]">
+          <p className="text-sm text-slate-600">{name}</p>
+          <p className="mt-1 text-3xl font-semibold text-slate-900">{formatValue(item.value)}</p>
+          <p className="text-xs text-slate-500">{item.unit}</p>
+          <div className="mt-3 flex items-center justify-between border-t border-emerald-100 pt-2 text-[11px] text-slate-600">
             <span>{item.source}</span>
-            <span className="text-[#3DFFA0]">{item.year}</span>
+            <span className="text-[#06923E]">{item.year}</span>
           </div>
-          {item.note && <p className="mt-2 text-[11px] italic text-[#4A5A78]">{item.note}</p>}
+          {item.note && <p className="mt-2 text-[11px] italic text-slate-500">{item.note}</p>}
           {overviewMeta && (
-            <p className="mt-2 text-[10px] uppercase tracking-wide text-[#3DFFA0]">
+            <p className="mt-2 text-[10px] uppercase tracking-wide text-[#06923E]">
               {overviewMeta.find(([indicatorName]) => indicatorName === name)?.[2] ?? ""}
             </p>
           )}
@@ -353,16 +344,16 @@ function IndicatorTable({
   onPageChange: (next: number) => void;
 }) {
   return (
-    <div className="rounded-lg border border-[#1C2535] bg-[#111722] p-3">
-      <table className="w-full text-left text-sm text-[#E2E8F4]">
+    <div className="rounded-lg border border-emerald-100 bg-white p-3">
+      <table className="w-full text-left text-sm text-slate-900">
         <thead>
-          <tr className="border-b border-[#1C2535] text-xs uppercase tracking-wide text-[#4A5A78]">
+          <tr className="border-b border-emerald-100 text-xs uppercase tracking-wide text-slate-500">
             <th className="py-2">Indicator</th><th>Value</th><th>Unit</th><th>Year</th><th>Source</th>
           </tr>
         </thead>
         <tbody>
           {rows.map(([name, item]) => (
-            <tr key={name} className="border-b border-[#1C2535]">
+            <tr key={name} className="border-b border-emerald-100">
               <td className="py-2">{name}</td>
               <td>{formatValue(item.value)}</td>
               <td>{item.unit}</td>
@@ -373,9 +364,9 @@ function IndicatorTable({
         </tbody>
       </table>
       <div className="mt-3 flex items-center justify-end gap-2">
-        <button disabled={page <= 1} onClick={() => onPageChange(page - 1)} className="rounded border border-[#243044] px-2 py-1 text-xs text-[#91A0BC] disabled:opacity-50">Prev</button>
-        <span className="text-xs text-[#91A0BC]">{page}/{totalPages}</span>
-        <button disabled={page >= totalPages} onClick={() => onPageChange(page + 1)} className="rounded border border-[#243044] px-2 py-1 text-xs text-[#91A0BC] disabled:opacity-50">Next</button>
+        <button disabled={page <= 1} onClick={() => onPageChange(page - 1)} className="rounded border border-[#243044] px-2 py-1 text-xs text-slate-600 disabled:opacity-50">Prev</button>
+        <span className="text-xs text-slate-600">{page}/{totalPages}</span>
+        <button disabled={page >= totalPages} onClick={() => onPageChange(page + 1)} className="rounded border border-[#243044] px-2 py-1 text-xs text-slate-600 disabled:opacity-50">Next</button>
       </div>
     </div>
   );
@@ -398,18 +389,18 @@ function CompareSection({ compareStates, pillar, color }: { compareStates: strin
         const max = Math.max(...values.map((v) => v.value), 1);
 
         return (
-          <div key={indicatorName} className="rounded-lg border border-[#1C2535] bg-[#111722] p-4">
-            <p className="mb-2 text-sm text-[#E2E8F4]">{indicatorName}</p>
+          <div key={indicatorName} className="rounded-lg border border-emerald-100 bg-white p-4">
+            <p className="mb-2 text-sm text-slate-900">{indicatorName}</p>
             <div className="space-y-2">
               {values.map((entry) => (
                 <div key={entry.state} className="flex items-center gap-2 text-xs">
-                  <span className="w-20 text-right text-[#91A0BC]">{entry.state}</span>
-                  <div className="h-4 flex-1 rounded bg-[#1A2438]">
+                  <span className="w-20 text-right text-slate-600">{entry.state}</span>
+                  <div className="h-4 flex-1 rounded bg-[#F0FDF4]">
                     <div className="h-4 rounded text-right text-[10px] text-black" style={{ width: `${(entry.value / max) * 100}%`, backgroundColor: color }}>
                       {entry.value.toFixed(1)}
                     </div>
                   </div>
-                  <span className="w-10 text-[#91A0BC]">{entry.unit}</span>
+                  <span className="w-10 text-slate-600">{entry.unit}</span>
                 </div>
               ))}
             </div>
