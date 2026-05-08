@@ -28,7 +28,7 @@ const TopbarFiltersContext = createContext<
 export function TopbarFiltersProvider({ children }: { children: ReactNode }) {
   const [selectedState, setSelectedState] = useState("");
   const [selectedZone, setSelectedZone] = useState("");
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [selectedYear, setSelectedYear] = useState(2022);
   const [showConfirm, setShowConfirm] = useState(false);
 
 
