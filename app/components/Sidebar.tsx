@@ -40,7 +40,7 @@ export const EducationIcon = "/svg/eduIcon.svg";
 
 export const navItem: NavItem[] = [
   {
-    href: "/dashboard/data?pillar=overview",
+    href: "/dashboard",
     matchPath: "/dashboard/data",
     pillar: "overview",
     icon: <FaTachometerAlt />,
@@ -262,10 +262,10 @@ const Sidebar: React.FC<SidebarProps> = ({
               // Normal single item
               const isActive = item.href
                 ? !item.external &&
-                  ((item.matchPath
-                    ? pathname === item.matchPath
-                    : pathname === item.href || pathname.startsWith(item.href + "/")) &&
-                    (item.pillar ? activePillar === item.pillar : true))
+                ((item.matchPath
+                  ? pathname === item.matchPath
+                  : pathname === item.href || pathname.startsWith(item.href + "/")) &&
+                  (item.pillar ? activePillar === item.pillar : true))
                 : false;
               return (
                 <Link
