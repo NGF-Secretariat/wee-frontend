@@ -79,6 +79,18 @@ export function DataDashboard() {
     });
   };
 
+  const toggleZone = (states: string[]) => {
+    setSelectedCompareStates((prev) => {
+      const allIn = states.every((s) => prev.includes(s));
+      if (allIn) {
+        return prev.filter((s) => !states.includes(s));
+      } else {
+        const toAdd = states.filter((s) => !prev.includes(s));
+        return [...prev, ...toAdd].slice(0, MAX_COMPARE);
+      }
+    });
+  };
+
   const resetTablePage = () => setTablePage(1);
   const handlePillarSelect = (pillar: PillarSelection) => {
     router.push(`/dashboard/data?pillar=${pillar}`);
@@ -87,11 +99,11 @@ export function DataDashboard() {
 
   return (
     <div className="space-y-4 pb-8">
-      <div className="rounded-2xl border border-emerald-100 bg-[#F0FDF4] p-5 text-slate-900">
+      <div className="rounded-2xl border border-emerald-100 bg-[#F0FDF4] p-5 text-black">
         <div className="flex items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-semibold">NGF Gender Dashboard</h1>
-            {/* <p className="text-sm text-slate-600">Nigeria 2022 Microdata </p> */}
+            {/* <p className="text-sm text-slate-800">Nigeria 2022 Microdata </p> */}
           </div>
         </div>
         {!isYearAvailable && (
@@ -109,6 +121,7 @@ export function DataDashboard() {
           onPillarSelect={handlePillarSelect}
           onStateSelect={setSelectedState}
           onToggleCompare={toggleCompare}
+          onToggleZone={toggleZone}
         />
 
         <section className="space-y-4">
@@ -156,6 +169,7 @@ function StateSidebar({
   onPillarSelect,
   onStateSelect,
   onToggleCompare,
+  onToggleZone,
 }: {
   selectedPillar: PillarSelection;
   activeState: string;
@@ -163,11 +177,12 @@ function StateSidebar({
   onPillarSelect: (pillar: PillarSelection) => void;
   onStateSelect: (state: string) => void;
   onToggleCompare: (state: string) => void;
+  onToggleZone: (states: string[]) => void;
 }) {
   return (
-    <aside className="max-h-[80vh] overflow-auto rounded-xl border border-emerald-100 bg-[#F0FDF4] p-3 text-sm text-slate-900">
+    <aside className="max-h-[80vh] overflow-auto rounded-xl border border-emerald-100 bg-[#F0FDF4] p-3 text-sm text-black">
       <div className="mb-4">
-        <p className="mb-2 text-xs uppercase tracking-widest text-slate-500">Tabs</p>
+        <p className="mb-2 text-xs uppercase tracking-widest text-slate-800">Tabs</p>
         <div className="space-y-1">
           <button
             onClick={() => onPillarSelect("overview")}
@@ -195,29 +210,51 @@ function StateSidebar({
         </div>
       </div>
 
-      {Object.entries(GENDER_DASHBOARD_META.zones).map(([code, zone]) => (
-        <div key={code} className="mb-3">
-          <p className="mb-1 text-xs uppercase tracking-widest text-slate-500">{zone.label}</p>
-          <div className="space-y-1">
-            {zone.states.slice().sort().map((state) => (
-              <div key={state} className="flex items-center justify-between gap-2">
-                <button
-                  onClick={() => onStateSelect(state === "FCT" ? "Federal Capital Territory" : state)}
-                  className={`text-xs transition-colors ${state === activeState ? "text-[#06923E] font-medium" : "text-slate-600"} hover:text-[#06923E]`}
-                >
-                  {state}
-                </button>
-                <button
-                  onClick={() => onToggleCompare(state)}
-                  className={`rounded px-2 py-1 text-[10px] transition-colors ${selectedCompare.includes(state) ? "bg-[#06923E] text-white" : "bg-white text-slate-600 hover:bg-emerald-50 border border-emerald-100"}`}
-                >
-                  {selectedCompare.includes(state) ? "On" : "Add"}
-                </button>
-              </div>
-            ))}
+      <div className="flex items-center justify-between mb-4 border-b border-emerald-50 pb-2">
+        <p className="text-xs uppercase tracking-widest text-slate-800 font-bold">Zones</p>
+        <button
+          onClick={() => onToggleZone(Object.values(GENDER_DASHBOARD_META.zones).flatMap(z => z.states).map(s => s === "FCT" ? "Federal Capital Territory" : s))}
+          className="text-[10px] font-medium text-[#06923E] hover:underline"
+        >
+          Select All States
+        </button>
+      </div>
+
+      {Object.entries(GENDER_DASHBOARD_META.zones).map(([code, zone]) => {
+        const zoneStates = zone.states.map(s => s === "FCT" ? "Federal Capital Territory" : s);
+        const allInZoneSelected = zoneStates.every(s => selectedCompare.includes(s));
+
+        return (
+          <div key={code} className="mb-3">
+            <div className="flex items-center justify-between mb-1">
+              <p className="text-xs uppercase tracking-widest text-slate-800">{zone.label}</p>
+              <button
+                onClick={() => onToggleZone(zoneStates)}
+                className={`text-[10px] font-medium transition-colors ${allInZoneSelected ? "text-[#06923E]" : "text-slate-600 hover:text-[#06923E]"}`}
+              >
+                {allInZoneSelected ? "Deselect All" : "Select All"}
+              </button>
+            </div>
+            <div className="space-y-1">
+              {zone.states.slice().sort().map((state) => (
+                <div key={state} className="flex items-center justify-between gap-2">
+                  <button
+                    onClick={() => onStateSelect(state === "FCT" ? "Federal Capital Territory" : state)}
+                    className={`text-xs transition-colors ${state === activeState ? "text-[#06923E] font-medium" : "text-slate-800"} hover:text-[#06923E]`}
+                  >
+                    {state}
+                  </button>
+                  <button
+                    onClick={() => onToggleCompare(state)}
+                    className={`rounded px-2 py-1 text-[10px] transition-colors ${selectedCompare.includes(state) ? "bg-[#06923E] text-white" : "bg-white text-slate-800 hover:bg-emerald-50 border border-emerald-100"}`}
+                  >
+                    {selectedCompare.includes(state) ? "On" : "Add"}
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        )})}
     </aside>
   );
 }
@@ -242,10 +279,10 @@ function StateHeader({
   onViewChange: (mode: ViewMode) => void;
 }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-emerald-100 bg-[#F0FDF4] p-4 text-slate-900">
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-emerald-100 bg-[#F0FDF4] p-4 text-black">
       <div>
         <h2 className="text-3xl font-semibold">{activeState}</h2>
-        <p className="text-xs text-slate-600">{zone} Zone · {pillarLabel} · {count} indicators · NLSS 2022</p>
+        <p className="text-xs text-slate-800">{zone} Zone · {pillarLabel} · {count} indicators · NLSS 2022</p>
       </div>
       <div className="flex gap-2">
         {(["cards", "table", "compare"] as ViewMode[]).map((mode) => (
@@ -253,7 +290,7 @@ function StateHeader({
             key={mode}
             onClick={() => onViewChange(mode)}
             disabled={(mode === "compare" && (compareCount === 0 || selectedPillar === "overview"))}
-            className={`rounded border px-3 py-2 text-xs uppercase tracking-wide transition-all ${viewMode === mode ? "bg-[#06923E] border-[#06923E] text-white" : "border-[#243044] text-slate-600 hover:border-[#06923E] hover:text-white"} disabled:cursor-not-allowed disabled:opacity-50`}
+            className={`rounded border px-3 py-2 text-xs uppercase tracking-wide transition-all ${viewMode === mode ? "bg-[#06923E] border-[#06923E] text-white" : "border-[#243044] text-slate-800 hover:border-[#06923E] hover:text-white"} disabled:cursor-not-allowed disabled:opacity-50`}
           >
             {mode === "compare" ? `Compare (${compareCount})` : mode}
           </button>
@@ -290,8 +327,8 @@ function ScoreCards({
             }}
           >
             <p className="text-[10px] uppercase tracking-wide" style={{ color: pillar.color }}>{pillar.label}</p>
-            <p className="mt-1 text-2xl font-semibold text-slate-900">{average ? average.toFixed(1) : "-"}</p>
-            <p className="text-[11px] text-slate-600">{count} indicators</p>
+            <p className="mt-1 text-2xl font-semibold text-black">{average ? average.toFixed(1) : "-"}</p>
+            <p className="text-[11px] text-slate-800">{count} indicators</p>
           </button>
         );
       })}
@@ -313,14 +350,14 @@ function IndicatorCards({
       {entries.map(([name, item]) => (
         <article key={name} className="rounded-lg border border-emerald-100 bg-white p-4">
           <div className="mb-2 h-1 rounded" style={{ backgroundColor: color }} />
-          <p className="text-sm text-slate-600">{name}</p>
-          <p className="mt-1 text-3xl font-semibold text-slate-900">{formatValue(item.value)}</p>
-          <p className="text-xs text-slate-500">{item.unit}</p>
-          <div className="mt-3 flex items-center justify-between border-t border-emerald-100 pt-2 text-[11px] text-slate-600">
+          <p className="text-sm text-slate-800">{name}</p>
+          <p className="mt-1 text-3xl font-semibold text-black">{formatValue(item.value)}</p>
+          <p className="text-xs text-slate-800">{item.unit}</p>
+          <div className="mt-3 flex items-center justify-between border-t border-emerald-100 pt-2 text-[11px] text-slate-800">
             <span>{item.source}</span>
             <span className="text-[#06923E]">{item.year}</span>
           </div>
-          {item.note && <p className="mt-2 text-[11px] italic text-slate-500">{item.note}</p>}
+          {item.note && <p className="mt-2 text-[11px] italic text-slate-800">{item.note}</p>}
           {overviewMeta && (
             <p className="mt-2 text-[10px] uppercase tracking-wide text-[#06923E]">
               {overviewMeta.find(([indicatorName]) => indicatorName === name)?.[2] ?? ""}
@@ -345,9 +382,9 @@ function IndicatorTable({
 }) {
   return (
     <div className="rounded-lg border border-emerald-100 bg-white p-3">
-      <table className="w-full text-left text-sm text-slate-900">
+      <table className="w-full text-left text-sm text-black">
         <thead>
-          <tr className="border-b border-emerald-100 text-xs uppercase tracking-wide text-slate-500">
+          <tr className="border-b border-emerald-100 text-xs uppercase tracking-wide text-slate-800">
             <th className="py-2">Indicator</th><th>Value</th><th>Unit</th><th>Year</th><th>Source</th>
           </tr>
         </thead>
@@ -364,9 +401,9 @@ function IndicatorTable({
         </tbody>
       </table>
       <div className="mt-3 flex items-center justify-end gap-2">
-        <button disabled={page <= 1} onClick={() => onPageChange(page - 1)} className="rounded border border-[#243044] px-2 py-1 text-xs text-slate-600 disabled:opacity-50">Prev</button>
-        <span className="text-xs text-slate-600">{page}/{totalPages}</span>
-        <button disabled={page >= totalPages} onClick={() => onPageChange(page + 1)} className="rounded border border-[#243044] px-2 py-1 text-xs text-slate-600 disabled:opacity-50">Next</button>
+        <button disabled={page <= 1} onClick={() => onPageChange(page - 1)} className="rounded border border-[#243044] px-2 py-1 text-xs text-slate-800 disabled:opacity-50">Prev</button>
+        <span className="text-xs text-slate-800">{page}/{totalPages}</span>
+        <button disabled={page >= totalPages} onClick={() => onPageChange(page + 1)} className="rounded border border-[#243044] px-2 py-1 text-xs text-slate-800 disabled:opacity-50">Next</button>
       </div>
     </div>
   );
@@ -390,17 +427,17 @@ function CompareSection({ compareStates, pillar, color }: { compareStates: strin
 
         return (
           <div key={indicatorName} className="rounded-lg border border-emerald-100 bg-white p-4">
-            <p className="mb-2 text-sm text-slate-900">{indicatorName}</p>
+            <p className="mb-2 text-sm text-black">{indicatorName}</p>
             <div className="space-y-2">
               {values.map((entry) => (
                 <div key={entry.state} className="flex items-center gap-2 text-xs">
-                  <span className="w-20 text-right text-slate-600">{entry.state}</span>
+                  <span className="w-20 text-right text-slate-800">{entry.state}</span>
                   <div className="h-4 flex-1 rounded bg-[#F0FDF4]">
-                    <div className="h-4 rounded text-right text-[10px] text-black" style={{ width: `${(entry.value / max) * 100}%`, backgroundColor: color }}>
+                    <div className="h-4 rounded text-right text-[10px] text-white font-medium pr-1.5 flex items-center justify-end" style={{ width: `${(entry.value / max) * 100}%`, backgroundColor: color }}>
                       {entry.value.toFixed(1)}
                     </div>
                   </div>
-                  <span className="w-10 text-slate-600">{entry.unit}</span>
+                  <span className="w-10 text-slate-800">{entry.unit}</span>
                 </div>
               ))}
             </div>
