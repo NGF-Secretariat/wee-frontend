@@ -15,7 +15,7 @@ import {
   type PillarId,
 } from "@/app/lib/gender-dashboard";
 
-const MAX_COMPARE = 5;
+const MAX_COMPARE = 36;
 const DEFAULT_STATE = "Lagos";
 const ROWS_PER_PAGE = 12;
 
