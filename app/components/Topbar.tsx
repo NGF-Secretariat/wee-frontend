@@ -70,7 +70,7 @@ const Topbar: React.FC<TopbarProps> = ({
                     : pathname === "/dashboard/legal"
                       ? `Legal Framework`
                       : pathname === "/dashboard/data"
-                        ? `NGF Gender Dashboard & Insights`
+                        ? `NGF Gender Dashboard`
                         : pathname === "/dashboard/nfwp-su"
                           ? `NFWP Support Unit`
                           : title
