@@ -157,7 +157,7 @@ function GovernanceChartsComponent({
   return (
     <div className={`space-y-6 ${className ?? ""}`}>
       <div className="rounded-2xl border border-green-100 bg-gradient-to-r from-green-50 via-white to-emerald-50 p-6">
-        <h2 className="text-2xl font-bold text-[#06923E]">{title}</h2>
+        <h2 className="text-2xl font-bold text-ngf-green">{title}</h2>
         <p className="mt-2 text-sm text-gray-600">
           Policy adoption and referral-system capacity summary using chart-first legal/governance analytics.
         </p>
@@ -222,9 +222,8 @@ function GovernanceChartsComponent({
                   >
                     <p className="text-sm text-gray-700">{row.name}</p>
                     <span
-                      className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                        row.value === 1 ? "bg-emerald-100 text-emerald-800" : "bg-gray-200 text-gray-700"
-                      }`}
+                      className={`rounded-full px-3 py-1 text-xs font-semibold ${row.value === 1 ? "bg-emerald-100 text-emerald-800" : "bg-gray-200 text-gray-700"
+                        }`}
                     >
                       {row.status}
                     </span>

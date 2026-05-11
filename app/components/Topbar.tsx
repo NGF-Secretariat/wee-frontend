@@ -6,7 +6,7 @@ import { FaBars } from "react-icons/fa";
 import Image from "next/image";
 
 import { useTopbarFilters } from "../context/TopbarFiltersContext";
-import { NigeriaMap, StateMap } from "./maps";
+import { LGAMap, NigeriaMap, StateMap } from "./maps";
 
 export interface TopbarProps {
   collapsed?: boolean;
@@ -50,6 +50,9 @@ const Topbar: React.FC<TopbarProps> = ({
     setShowConfirm,
     selectedCompareStates,
   } = useTopbarFilters();
+
+  console.log("Selected Zone: ", selectedState);
+
 
   useEffect(() => {
     if (!selectedYear) return;
@@ -98,18 +101,14 @@ const Topbar: React.FC<TopbarProps> = ({
 
   const StateLogo = selectedState ? logos[selectedState] : null;
 
-  useEffect(() => {
-    try {
-      const storedUser = sessionStorage.getItem("user");
-      if (storedUser) {
-        const parsed = JSON.parse(storedUser);
-        setSelectedState(parsed?.state || "");
-      }
-    } catch (err) {
-      console.warn("Invalid session user data:", err);
-      setSelectedState("");
-    }
-  }, [setSelectedState]);
+  const stateId = selectedState?.trim().toLowerCase() ===
+    "federal capital territory"
+    ? "abuja-federal-capital-territory"
+    : selectedState
+      ?.trim()
+      .toLowerCase()
+      .replace(/\s+/g, "-");
+
 
   return (
     <div className="w-full bg-[#F5F7FA] border-b px-4 py-4">
@@ -135,6 +134,8 @@ const Topbar: React.FC<TopbarProps> = ({
               onChange={(e) => {
                 const value = e.target.value;
                 setSelectedState(value);
+                console.log("selectedState", value);
+
                 onStateChange?.(value);
               }}
               className="bg-[#dadcde] text-black border border-[#dadcde] text-sm px-3 py-2 rounded-full cursor-pointer"
@@ -200,7 +201,7 @@ const Topbar: React.FC<TopbarProps> = ({
                   colorScale={["#00a63d", "#8fce00", "#b6e35a"]}// default, compare, selected
                   containerStyle={{ width: "60px", height: "60px" }}
                 />
-                : <StateMap stateId={selectedState}
+                : <StateMap stateId={stateId}
                   containerStyle={{ width: "50px", height: "50px", backgroundColor: "#d0fae5", borderRadius: "50%" }}
                   theme={{
                     defaultFill: "#00a63d",
@@ -220,6 +221,7 @@ const Topbar: React.FC<TopbarProps> = ({
                 />
               </div>
             )} */}
+
           </div>
         </div>
       </div>

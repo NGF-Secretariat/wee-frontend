@@ -144,7 +144,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         <button
           aria-label="Close sidebar"
           onClick={closeMobile}
-          className="md:hidden fixed top-4 right-4 z-50 bg-white text-[#06923E] p-2 rounded shadow-lg"
+          className="md:hidden fixed top-4 right-4 z-50 bg-white text-ngf-green p-2 rounded shadow-lg"
         >
           <FaTimes size={24} />
         </button>
@@ -155,7 +155,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         aria-label="Sidebar"
         className={cn(
           "h-full min-h-screen relative transition-all duration-300 border-r shadow-2xl z-40",
-          "bg-[#06923E] text-white md:bg-white md:text-black",
+          "bg-ngf-green text-white md:bg-white md:text-black",
           isViewCollapsed ? "w-20" : "w-64 min-w-[256px]",
         )}
       >
@@ -163,7 +163,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         <button
           aria-label={isViewCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           onClick={() => setCollapsed(!collapsed)}
-          className="hidden md:flex items-center justify-center absolute top-4 right-[-16px] text-white bg-[#06923E] border border-white rounded-full w-8 h-8 z-50 shadow"
+          className="hidden md:flex items-center justify-center absolute top-4 right-[-16px] text-white bg-ngf-green border border-white rounded-full w-8 h-8 z-50 shadow"
         >
           {isViewCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
         </button>
@@ -194,7 +194,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     {/* Parent item */}
                     <button
                       onClick={() => toggleExpand(item.label)}
-                      className="w-full flex items-center justify-between p-2 rounded hover:bg-[#0b7a3a] hover:text-[#ecfdf3] cursor-pointer "
+                      className="w-full flex items-center justify-between p-2 rounded hover:bg-ngf-green-dark hover:text-[#ecfdf3] cursor-pointer "
                     >
                       <div className="flex items-center space-x-2">
                         {typeof item.icon === "string" ? (
@@ -233,7 +233,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                             <Link
                               key={child.label}
                               href={child.href!}
-                              className={`p-2 rounded flex items-center space-x-2 hover:bg-[#0b7a3a] hover:text-[#ecfdf3] ${isActive ? "bg-[#0f8a45] text-[#f0fdf4]" : ""
+                              className={`p-2 rounded flex items-center space-x-2 hover:bg-ngf-green-dark hover:text-[#ecfdf3] ${isActive ? "bg-ngf-green-light text-[#f0fdf4]" : ""
                                 }`}
                               onClick={closeMobile}
                             >
@@ -273,7 +273,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   href={item.href!}
                   target={item.external ? "_blank" : undefined}
                   rel={item.external ? "noopener noreferrer" : undefined}
-                  className={`p-2 rounded flex items-center space-x-2 hover:bg-[#0b7a3a] hover:text-[#ecfdf3] ${isActive ? "bg-[#0f8a45] text-[#f0fdf4]" : ""}`}
+                  className={`p-2 rounded flex items-center space-x-2 hover:bg-ngf-green-dark hover:text-[#ecfdf3] ${isActive ? "bg-ngf-green-light text-[#f0fdf4]" : ""}`}
                   onClick={closeMobile}
                 >
                   {typeof item.icon === "string" ? (

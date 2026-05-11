@@ -213,7 +213,7 @@ function StateSidebar({
         <p className="text-xs uppercase tracking-widest text-slate-800 font-bold">Zones</p>
         <button
           onClick={() => onToggleZone(Object.values(GENDER_DASHBOARD_META.zones).flatMap(z => z.states).map(s => s === "FCT" ? "Federal Capital Territory" : s))}
-          className="text-[10px] font-medium text-[#06923E] hover:underline"
+          className="text-[12px] font-medium text-ngf-green hover:underline cursor-pointer hover:text-ngf-green-dark"
         >
           Select All States
         </button>
@@ -229,7 +229,7 @@ function StateSidebar({
               <p className="text-xs uppercase tracking-widest text-slate-800">{zone.label}</p>
               <button
                 onClick={() => onToggleZone(zoneStates)}
-                className={`text-[10px] font-medium transition-colors ${allInZoneSelected ? "text-[#06923E]" : "text-slate-600 hover:text-[#06923E]"}`}
+                className={`text-[10px] font-medium transition-colors cursor-pointer ${allInZoneSelected ? "text-ngf-green" : "text-slate-600 hover:text-ngf-green-dark"}`}
               >
                 {allInZoneSelected ? "Deselect All" : "Select All"}
               </button>
