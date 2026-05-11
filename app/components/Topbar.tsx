@@ -1,12 +1,12 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { FaBars } from "react-icons/fa";
 import Image from "next/image";
 
-import ConfirmPrompt from "./ConfirmPrompt";
 import { useTopbarFilters } from "../context/TopbarFiltersContext";
+import { NigeriaMap, StateMap } from "./maps";
 
 export interface TopbarProps {
   collapsed?: boolean;
@@ -48,6 +48,7 @@ const Topbar: React.FC<TopbarProps> = ({
     selectedZone,
     showConfirm,
     setShowConfirm,
+    selectedCompareStates,
   } = useTopbarFilters();
 
   useEffect(() => {
@@ -184,9 +185,32 @@ const Topbar: React.FC<TopbarProps> = ({
                 className="object-contain invert brightness-0 animate-pulse"
               />
               {selectedState || "select a State"}
+              {selectedCompareStates.length > 0 ?
+                <NigeriaMap
+                  choroplethData={{
+                    ...(selectedCompareStates.reduce((acc, s) => ({ ...acc, [s]: 2 }), {})),
+                    [selectedState]: 2
+                  }}
+                  // theme={{
+                  //   defaultFill: "#000000",
+                  //   selectedFill: "#00a63d",
+                  //   strokeColor: "#00a63d",
+                  //   strokeWidth: 10,
+                  // }}
+                  colorScale={["#00a63d", "#8fce00", "#b6e35a"]}// default, compare, selected
+                  containerStyle={{ width: "60px", height: "60px" }}
+                />
+                : <StateMap stateId={selectedState}
+                  containerStyle={{ width: "50px", height: "50px", backgroundColor: "#d0fae5", borderRadius: "50%" }}
+                  theme={{
+                    defaultFill: "#00a63d",
+                    strokeWidth: 2,
+                  }}
+                />}
+
             </div>
 
-            {StateLogo && (
+            {/* {StateLogo && (
               <div className="w-12 h-12 relative bg-gray-300 rounded-2xl my-4">
                 <Image
                   src={(StateLogo as any).src ?? StateLogo}
@@ -195,7 +219,7 @@ const Topbar: React.FC<TopbarProps> = ({
                   className="object-contain"
                 />
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>

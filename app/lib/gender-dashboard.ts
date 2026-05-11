@@ -1,5 +1,6 @@
-import rawData from "@/app/lib/data/gender-dashboard-data.json";
-import rawMeta from "@/app/lib/data/gender-dashboard-meta.json";
+import rawData from "./data/gender-dashboard-data.json";
+import rawMeta from "./data/gender-dashboard-meta.json";
+
 
 export type PillarId = "econ" | "edu" | "soc" | "health" | "pol" | "legal" | "data";
 

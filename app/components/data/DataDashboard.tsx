@@ -25,9 +25,8 @@ type PillarSelection = PillarId | "overview";
 export function DataDashboard() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { selectedState, selectedYear, setSelectedYear, setSelectedState } = useTopbarFilters();
+  const { selectedState, selectedYear, setSelectedState, selectedCompareStates, setSelectedCompareStates } = useTopbarFilters();
   const [viewMode, setViewMode] = useState<ViewMode>("cards");
-  const [selectedCompareStates, setSelectedCompareStates] = useState<string[]>([]);
   const [tablePage, setTablePage] = useState(1);
   const pillarParam = searchParams.get("pillar");
   const validPillarIds = new Set(["overview", ...GENDER_DASHBOARD_META.pillars.map((item) => item.id)]);
@@ -73,7 +72,7 @@ export function DataDashboard() {
 
   const toggleCompare = (state: string) => {
     setSelectedCompareStates((prev) => {
-      if (prev.includes(state)) return prev.filter((item) => item !== state);
+      if (prev.includes(state)) return prev.filter((item: any) => item !== state);
       if (prev.length >= MAX_COMPARE) return prev;
       return [...prev, state];
     });
@@ -254,7 +253,8 @@ function StateSidebar({
               ))}
             </div>
           </div>
-        )})}
+        )
+      })}
     </aside>
   );
 }

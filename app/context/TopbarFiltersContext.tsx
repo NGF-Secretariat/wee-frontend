@@ -19,6 +19,8 @@ interface TopbarFiltersContextType {
   setSelectedZone: (zone: string) => void;
   showConfirm: boolean;
   setShowConfirm: (confirm: boolean) => void;
+  selectedCompareStates: string[];
+  setSelectedCompareStates: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const TopbarFiltersContext = createContext<
@@ -30,6 +32,7 @@ export function TopbarFiltersProvider({ children }: { children: ReactNode }) {
   const [selectedZone, setSelectedZone] = useState("");
   const [selectedYear, setSelectedYear] = useState(2022);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [selectedCompareStates, setSelectedCompareStates] = useState<string[]>([]);
 
 
   return (
@@ -43,6 +46,8 @@ export function TopbarFiltersProvider({ children }: { children: ReactNode }) {
         setSelectedZone,
         showConfirm,
         setShowConfirm,
+        selectedCompareStates,
+        setSelectedCompareStates,
       }}
     >
       {children}
