@@ -21,10 +21,10 @@ export default function DashboardPage() {
           {/* Text Section */}
           <div className="w-full md:w-1/2">
             <p className="text-ngf-green font-bold text-2xl leading-tight text-center md:text-left sm:text-3xl lg:text-5xl">
-              Monitoring and <br />
-              Evaluation Plan <br />
-              for the Gender Affairs <br />
-              Department
+              Women <br />
+              Economic <br />
+              Empowerment <br />
+              (WEE)
             </p>
           </div>
 
@@ -43,7 +43,7 @@ export default function DashboardPage() {
         {/* Footer Banner */}
         <div className="bg-ngf-green rounded-2xl px-4 py-5 mt-8">
           <p className="text-white text-center text-sm sm:text-base md:text-lg font-medium">
-            Women Economic Empowerment (WEE) programme.
+            &copy; {new Date().getFullYear()}
           </p>
         </div>
       </div>
