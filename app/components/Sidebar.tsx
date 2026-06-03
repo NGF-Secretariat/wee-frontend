@@ -96,6 +96,13 @@ export const navItem: NavItem[] = [
     label: "Data",
   },
   {
+    href: "/dashboard/score-card",
+    matchPath: "/dashboard/score-card",
+    pillar: "score-cards",
+    icon: <FaTachometerAlt />,
+    label: "Score Cards",
+  },
+  {
     href: "https://nfwp.gov.ng",
     external: true,
     icon: <FaProjectDiagram />,
