@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useTopbarFilters } from "@/app/context/TopbarFiltersContext";
 import {
   AVAILABLE_YEARS,
+  calculatePillarAverage,
   GENDER_DASHBOARD_DATA,
   GENDER_DASHBOARD_META,
   getZoneForState,
@@ -19,12 +20,13 @@ import { ScoreCards } from "./ScoreCards";
 import { IndicatorCards } from "./IndicatorCards";
 import { IndicatorTable } from "./IndicatorTable";
 import { CompareSection } from "./CompareSection";
+import { DataChartsView } from "./DataChartsView";
 
 const MAX_COMPARE = 36;
 const DEFAULT_STATE = "Lagos";
 const ROWS_PER_PAGE = 12;
 
-type ViewMode = "cards" | "table" | "compare";
+type ViewMode = "cards" | "charts" | "table" | "compare";
 type PillarSelection = PillarId | "overview";
 
 export function DataDashboard() {
@@ -74,6 +76,21 @@ export function DataDashboard() {
     : GENDER_DASHBOARD_META.pillars.find((item) => item.id === selectedPillar)!;
   const zone = getZoneForState(activeState);
   const isYearAvailable = AVAILABLE_YEARS.includes(selectedYear);
+
+  // Calculate Zone rank dynamically
+  const zoneRankInfo = useMemo(() => {
+    if (selectedPillar === "overview") return undefined;
+    const zoneMeta = GENDER_DASHBOARD_META.zones[zone.code];
+    if (!zoneMeta) return undefined;
+    const statesInZone = zoneMeta.states.map(s => s === "FCT" ? "Federal Capital Territory" : s);
+    const scores = statesInZone.map(st => {
+      const avg = calculatePillarAverage(GENDER_DASHBOARD_DATA[st], selectedPillar) || 0;
+      return { state: st, score: avg };
+    });
+    scores.sort((a, b) => b.score - a.score);
+    const rank = scores.findIndex(s => s.state === activeState) + 1;
+    return `Rank #${rank} in Zone`;
+  }, [activeState, selectedPillar, zone]);
 
   const toggleCompare = (state: string) => {
     setSelectedCompareStates((prev: string[]) => {
@@ -137,6 +154,7 @@ export function DataDashboard() {
             selectedPillar={selectedPillar}
             compareCount={selectedCompareStates.length}
             onViewChange={setViewMode}
+            rankInfo={zoneRankInfo}
           />
 
           <ScoreCards activeState={activeState} selectedPillar={selectedPillar} onPillarSelect={handlePillarSelect} />
@@ -146,6 +164,15 @@ export function DataDashboard() {
               entries={indicatorEntries}
               color={currentPillarMeta.color}
               overviewMeta={selectedPillar === "overview" ? overviewEntries : undefined}
+              activeState={activeState}
+              selectedPillar={selectedPillar}
+            />
+          )}
+          {viewMode === "charts" && (
+            <DataChartsView
+              activeState={activeState}
+              selectedPillar={selectedPillar}
+              color={currentPillarMeta.color}
             />
           )}
           {viewMode === "table" && (
