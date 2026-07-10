@@ -5,8 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useTopbarFilters } from "@/app/context/TopbarFiltersContext";
 import {
   AVAILABLE_YEARS,
-  calculatePillarAverage,
-  formatValue,
   GENDER_DASHBOARD_DATA,
   GENDER_DASHBOARD_META,
   getZoneForState,
@@ -14,6 +12,13 @@ import {
   type IndicatorValue,
   type PillarId,
 } from "@/app/lib/gender-dashboard";
+
+import { StateSidebar } from "./StateSidebar";
+import { StateHeader } from "./StateHeader";
+import { ScoreCards } from "./ScoreCards";
+import { IndicatorCards } from "./IndicatorCards";
+import { IndicatorTable } from "./IndicatorTable";
+import { CompareSection } from "./CompareSection";
 
 const MAX_COMPARE = 36;
 const DEFAULT_STATE = "Lagos";
@@ -71,15 +76,15 @@ export function DataDashboard() {
   const isYearAvailable = AVAILABLE_YEARS.includes(selectedYear);
 
   const toggleCompare = (state: string) => {
-    setSelectedCompareStates((prev) => {
-      if (prev.includes(state)) return prev.filter((item: any) => item !== state);
+    setSelectedCompareStates((prev: string[]) => {
+      if (prev.includes(state)) return prev.filter((item) => item !== state);
       if (prev.length >= MAX_COMPARE) return prev;
       return [...prev, state];
     });
   };
 
   const toggleZone = (states: string[]) => {
-    setSelectedCompareStates((prev) => {
+    setSelectedCompareStates((prev: string[]) => {
       const allIn = states.every((s) => prev.includes(s));
       if (allIn) {
         return prev.filter((s) => !states.includes(s));
@@ -102,7 +107,6 @@ export function DataDashboard() {
         <div className="flex items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-semibold">NGF Gender Dashboard</h1>
-            {/* <p className="text-sm text-slate-800">Nigeria 2022 Microdata </p> */}
           </div>
         </div>
         {!isYearAvailable && (
@@ -157,293 +161,6 @@ export function DataDashboard() {
           )}
         </section>
       </div>
-    </div>
-  );
-}
-
-function StateSidebar({
-  selectedPillar,
-  activeState,
-  selectedCompare,
-  onPillarSelect,
-  onStateSelect,
-  onToggleCompare,
-  onToggleZone,
-}: {
-  selectedPillar: PillarSelection;
-  activeState: string;
-  selectedCompare: string[];
-  onPillarSelect: (pillar: PillarSelection) => void;
-  onStateSelect: (state: string) => void;
-  onToggleCompare: (state: string) => void;
-  onToggleZone: (states: string[]) => void;
-}) {
-  return (
-    <aside className="max-h-[80vh] overflow-auto rounded-xl border border-emerald-100 bg-[#F0FDF4] p-3 text-sm text-black">
-      <div className="mb-4">
-        <p className="mb-2 text-xs uppercase tracking-widest text-slate-800">Tabs</p>
-        <div className="space-y-1">
-          <button
-            onClick={() => onPillarSelect("overview")}
-            className="block w-full rounded px-2 py-2 text-left text-xs transition-colors"
-            style={{
-              color: selectedPillar === "overview" ? "#FFFFFF" : "#91A0BC",
-              backgroundColor: selectedPillar === "overview" ? "#06923E" : "transparent",
-            }}
-          >
-            Dashboard Overview
-          </button>
-          {GENDER_DASHBOARD_META.pillars.map((pillar) => (
-            <button
-              key={pillar.id}
-              onClick={() => onPillarSelect(pillar.id)}
-              className="block w-full rounded px-2 py-2 text-left text-xs transition-colors"
-              style={{
-                color: selectedPillar === pillar.id ? "#FFFFFF" : "#91A0BC",
-                backgroundColor: selectedPillar === pillar.id ? "#06923E" : "transparent",
-              }}
-            >
-              {pillar.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="flex items-center justify-between mb-4 border-b border-emerald-50 pb-2">
-        <p className="text-xs uppercase tracking-widest text-slate-800 font-bold">Zones</p>
-        <button
-          onClick={() => onToggleZone(Object.values(GENDER_DASHBOARD_META.zones).flatMap(z => z.states).map(s => s === "FCT" ? "Federal Capital Territory" : s))}
-          className="text-[12px] font-medium text-ngf-green hover:underline cursor-pointer hover:text-ngf-green-dark"
-        >
-          Select All States
-        </button>
-      </div>
-
-      {Object.entries(GENDER_DASHBOARD_META.zones).map(([code, zone]) => {
-        const zoneStates = zone.states.map(s => s === "FCT" ? "Federal Capital Territory" : s);
-        const allInZoneSelected = zoneStates.every(s => selectedCompare.includes(s));
-
-        return (
-          <div key={code} className="mb-3">
-            <div className="flex items-center justify-between mb-1">
-              <p className="text-xs uppercase tracking-widest text-slate-800">{zone.label}</p>
-              <button
-                onClick={() => onToggleZone(zoneStates)}
-                className={`text-[10px] font-medium transition-colors cursor-pointer ${allInZoneSelected ? "text-ngf-green" : "text-slate-600 hover:text-ngf-green-dark"}`}
-              >
-                {allInZoneSelected ? "Deselect All" : "Select All"}
-              </button>
-            </div>
-            <div className="space-y-1">
-              {zone.states.slice().sort().map((state) => (
-                <div key={state} className="flex items-center justify-between gap-2">
-                  <button
-                    onClick={() => onStateSelect(state === "FCT" ? "Federal Capital Territory" : state)}
-                    className={`text-xs transition-colors ${state === activeState ? "text-[#06923E] font-medium" : "text-slate-800"} hover:text-[#06923E]`}
-                  >
-                    {state}
-                  </button>
-                  <button
-                    onClick={() => onToggleCompare(state)}
-                    className={`rounded px-2 py-1 text-[10px] transition-colors ${selectedCompare.includes(state) ? "bg-[#06923E] text-white" : "bg-white text-slate-800 hover:bg-emerald-50 border border-emerald-100"}`}
-                  >
-                    {selectedCompare.includes(state) ? "On" : "Add"}
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )
-      })}
-    </aside>
-  );
-}
-
-function StateHeader({
-  activeState,
-  zone,
-  pillarLabel,
-  count,
-  viewMode,
-  selectedPillar,
-  compareCount,
-  onViewChange,
-}: {
-  activeState: string;
-  zone: string;
-  pillarLabel: string;
-  count: number;
-  viewMode: ViewMode;
-  selectedPillar: PillarSelection;
-  compareCount: number;
-  onViewChange: (mode: ViewMode) => void;
-}) {
-  return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-emerald-100 bg-[#F0FDF4] p-4 text-black">
-      <div>
-        <h2 className="text-3xl font-semibold">{activeState}</h2>
-        <p className="text-xs text-slate-800">{zone} Zone · {pillarLabel} · {count} indicators · NLSS 2022</p>
-      </div>
-      <div className="flex gap-2">
-        {(["cards", "table", "compare"] as ViewMode[]).map((mode) => (
-          <button
-            key={mode}
-            onClick={() => onViewChange(mode)}
-            disabled={(mode === "compare" && (compareCount === 0 || selectedPillar === "overview"))}
-            className={`rounded border px-3 py-2 text-xs uppercase tracking-wide transition-all ${viewMode === mode ? "bg-[#06923E] border-[#06923E] text-white" : "border-[#243044] text-slate-800 hover:border-[#06923E] hover:text-white"} disabled:cursor-not-allowed disabled:opacity-50`}
-          >
-            {mode === "compare" ? `Compare (${compareCount})` : mode}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ScoreCards({
-  activeState,
-  selectedPillar,
-  onPillarSelect,
-}: {
-  activeState: string;
-  selectedPillar: PillarSelection;
-  onPillarSelect: (pillar: PillarSelection) => void;
-}) {
-  const stateData = GENDER_DASHBOARD_DATA[activeState];
-
-  return (
-    <div className="grid grid-cols-2 gap-3 md:grid-cols-4 xl:grid-cols-7">
-      {GENDER_DASHBOARD_META.pillars.map((pillar) => {
-        const average = calculatePillarAverage(stateData, pillar.id);
-        const count = Object.keys(stateData?.[pillar.id] ?? {}).length;
-
-        return (
-          <button
-            key={pillar.id}
-            onClick={() => onPillarSelect(pillar.id)}
-            className="rounded-lg border bg-white p-3 text-left"
-            style={{
-              borderColor: selectedPillar === pillar.id ? pillar.color : "#D1FAE5",
-            }}
-          >
-            <p className="text-[10px] uppercase tracking-wide" style={{ color: pillar.color }}>{pillar.label}</p>
-            <p className="mt-1 text-2xl font-semibold text-black">{average ? average.toFixed(1) : "-"}</p>
-            <p className="text-[11px] text-slate-800">{count} indicators</p>
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-function IndicatorCards({
-  entries,
-  color,
-  overviewMeta,
-}: {
-  entries: Array<[string, IndicatorValue]>;
-  color: string;
-  overviewMeta?: Array<[string, IndicatorValue, string]>;
-}) {
-  return (
-    <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-      {entries.map(([name, item]) => (
-        <article key={name} className="rounded-lg border border-emerald-100 bg-white p-4">
-          <div className="mb-2 h-1 rounded" style={{ backgroundColor: color }} />
-          <p className="text-sm text-slate-800">{name}</p>
-          <p className="mt-1 text-3xl font-semibold text-black">{formatValue(item.value)}</p>
-          <p className="text-xs text-slate-800">{item.unit}</p>
-          <div className="mt-3 flex items-center justify-between border-t border-emerald-100 pt-2 text-[11px] text-slate-800">
-            <span>{item.source}</span>
-            <span className="text-[#06923E]">{item.year}</span>
-          </div>
-          {item.note && <p className="mt-2 text-[11px] italic text-slate-800">{item.note}</p>}
-          {overviewMeta && (
-            <p className="mt-2 text-[10px] uppercase tracking-wide text-[#06923E]">
-              {overviewMeta.find(([indicatorName]) => indicatorName === name)?.[2] ?? ""}
-            </p>
-          )}
-        </article>
-      ))}
-    </div>
-  );
-}
-
-function IndicatorTable({
-  rows,
-  page,
-  totalPages,
-  onPageChange,
-}: {
-  rows: Array<[string, IndicatorValue]>;
-  page: number;
-  totalPages: number;
-  onPageChange: (next: number) => void;
-}) {
-  return (
-    <div className="rounded-lg border border-emerald-100 bg-white p-3">
-      <table className="w-full text-left text-sm text-black">
-        <thead>
-          <tr className="border-b border-emerald-100 text-xs uppercase tracking-wide text-slate-800">
-            <th className="py-2">Indicator</th><th>Value</th><th>Unit</th><th>Year</th><th>Source</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map(([name, item]) => (
-            <tr key={name} className="border-b border-emerald-100">
-              <td className="py-2">{name}</td>
-              <td>{formatValue(item.value)}</td>
-              <td>{item.unit}</td>
-              <td>{item.year}</td>
-              <td>{item.source}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div className="mt-3 flex items-center justify-end gap-2">
-        <button disabled={page <= 1} onClick={() => onPageChange(page - 1)} className="rounded border border-[#243044] px-2 py-1 text-xs text-slate-800 disabled:opacity-50">Prev</button>
-        <span className="text-xs text-slate-800">{page}/{totalPages}</span>
-        <button disabled={page >= totalPages} onClick={() => onPageChange(page + 1)} className="rounded border border-[#243044] px-2 py-1 text-xs text-slate-800 disabled:opacity-50">Next</button>
-      </div>
-    </div>
-  );
-}
-
-function CompareSection({ compareStates, pillar, color }: { compareStates: string[]; pillar: PillarId; color: string }) {
-  const baseline = compareStates[0];
-  const indicators = Object.entries(GENDER_DASHBOARD_DATA[baseline]?.[pillar] ?? {});
-
-  return (
-    <div className="space-y-3">
-      {indicators.map(([indicatorName]) => {
-        const values = compareStates
-          .map((state) => {
-            const item = GENDER_DASHBOARD_DATA[state]?.[pillar]?.[indicatorName];
-            return { state, value: typeof item?.value === "number" ? item.value : null, unit: item?.unit ?? "" };
-          })
-          .filter((entry) => entry.value !== null) as Array<{ state: string; value: number; unit: string }>;
-
-        const max = Math.max(...values.map((v) => v.value), 1);
-
-        return (
-          <div key={indicatorName} className="rounded-lg border border-emerald-100 bg-white p-4">
-            <p className="mb-2 text-sm text-black">{indicatorName}</p>
-            <div className="space-y-2">
-              {values.map((entry) => (
-                <div key={entry.state} className="flex items-center gap-2 text-xs">
-                  <span className="w-20 text-right text-slate-800">{entry.state}</span>
-                  <div className="h-4 flex-1 rounded bg-[#F0FDF4]">
-                    <div className="h-4 rounded text-right text-[10px] text-white font-medium pr-1.5 flex items-center justify-end" style={{ width: `${(entry.value / max) * 100}%`, backgroundColor: color }}>
-                      {entry.value.toFixed(1)}
-                    </div>
-                  </div>
-                  <span className="w-10 text-slate-800">{entry.unit}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      })}
     </div>
   );
 }
